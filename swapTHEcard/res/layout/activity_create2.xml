@@ -1,0 +1,35 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="0px"
+        android:layout_weight="1" >
+        
+    	<Button 
+			android:text="TEXT" 
+			android:id="@+id/create_text"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent" />
+    	
+    	<Button 
+			android:text="IMAGE" 
+			android:id="@+id/create_image"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent" />
+    	
+    </LinearLayout>
+    
+    <sgcs.cardbox.View_Create
+        android:id="@+id/view_create"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="0px"
+        android:layout_weight="5" >
+	</sgcs.cardbox.View_Create>
+	
+</LinearLayout>
