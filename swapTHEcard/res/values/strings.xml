@@ -1,8 +1,8 @@
 <resources>
 
-    <string name="app_name">CardBox</string>
+    <string name="app_name">swapTHEcard</string>
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
-    <string name="title_activity_main">CardBox</string>
+    <string name="title_activity_main">swapTHEcard</string>
 
 </resources>

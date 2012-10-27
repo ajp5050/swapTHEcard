@@ -86,7 +86,13 @@ public class View_Create extends FrameLayout{
 		objlist.add(widget);
 	}
 	
-	public void createImageField(String lable, int width, int height){
-		;
+	public void createImageField(String src, int x, int y){
+		Widget_Create_Image widget = new Widget_Create_Image(act_create2);
+		widget.setParentView(this);
+		widget.setLocation(x, y);
+		widget.setImageSrc(src);
+		this.addView(widget);
+		
+		objlist.add(widget);
 	}
 }

@@ -34,6 +34,7 @@ public final class R {
         public static final int activity_manage1=0x7f030003;
         public static final int activity_recognize1=0x7f030004;
         public static final int activity_transmit1=0x7f030005;
+        public static final int transmit_main=0x7f030006;
     }
     public static final class menu {
         public static final int activity_main=0x7f060000;

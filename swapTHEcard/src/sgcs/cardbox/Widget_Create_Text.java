@@ -1,6 +1,9 @@
 package sgcs.cardbox;
 
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.text.InputType;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
@@ -16,9 +19,11 @@ public class Widget_Create_Text extends Widget_Create_Base {
 
 	private TextView textview;
 	private EditText edittext;
+	
 	private float temp_x, temp_y;
 	private int move_count;
-	
+	private boolean is_moving;
+	private AlertDialog.Builder menubuilder;
 	
 	public Widget_Create_Text(Context context) {
 		super(context);
@@ -37,6 +42,24 @@ public class Widget_Create_Text extends Widget_Create_Base {
 		params = new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		setLayoutParams(params);
 		
+		menubuilder = new AlertDialog.Builder(act_create2);
+		menubuilder.setTitle("Menu");
+		menubuilder.setItems(new String[] {"Select Lable", "Edit Font", "Delete"}, new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				switch(which){
+				case 0:
+					;
+				case 1:
+					;
+				case 2:
+					delete();
+				default:
+					;
+				}
+			}
+		});
+		menubuilder.create();
+		
 		text = "Empty";
 
 		//create textview
@@ -44,34 +67,53 @@ public class Widget_Create_Text extends Widget_Create_Base {
         textview.setText(text);
 		textview.setOnTouchListener(new View.OnTouchListener() {
 			public boolean onTouch(View v, MotionEvent event) {
-				if(event.getAction() == MotionEvent.ACTION_UP){
-					curr_x += (int)(event.getX()-temp_x);
-					curr_y += (int)(event.getY()-temp_y);
-					setLocation(curr_x, curr_y);
-					enable_edit();
+				boolean consumed = false;
+				if(event.getAction() == MotionEvent.ACTION_DOWN){
+					is_moving = false;
+					move_count = 0;
+					temp_x = event.getX();
+					temp_y = event.getY();
+					selected();
 				}
 				if(event.getAction() == MotionEvent.ACTION_MOVE){
 					move_count++;
 					if(move_count > 5){
+						is_moving = true;
 						setLocation(curr_x + (int)(event.getX()-temp_x), curr_y + (int)(event.getY()-temp_y));
 						move_count = 0;
 					}
 				}
-				if(event.getAction() == MotionEvent.ACTION_DOWN){
-					move_count = 0;
-					temp_x = event.getX();
-					temp_y = event.getY();
-					
-					selected();
+				if(event.getAction() == MotionEvent.ACTION_UP){
+					if(is_moving == true){
+						curr_x += (int)(event.getX()-temp_x);
+						curr_y += (int)(event.getY()-temp_y);
+						setLocation(curr_x, curr_y);
+						consumed = true;
+					}
 				}
-				return true;
+				return consumed;
+			}
+		});
+		textview.setOnLongClickListener(new View.OnLongClickListener() {
+			public boolean onLongClick(View v) {
+				boolean consumed = false;
+				if(is_moving == false){
+					menubuilder.show();
+					consumed = true;
+				}
+				return consumed;
+			}
+		});
+		textview.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				enable_edit();
 			}
 		});
 		
 		//create editview
 		edittext = new EditText(act_create2);
 		edittext.setText(text);
-        edittext.setVisibility(EditText.INVISIBLE);
+		edittext.setVisibility(EditText.INVISIBLE);
         edittext.setOnEditorActionListener(new OnEditorActionListener() {
 			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {				
 				disable_edit();
