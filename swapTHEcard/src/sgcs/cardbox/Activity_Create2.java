@@ -22,9 +22,15 @@ public class Activity_Create2 extends Activity {
         view_create.setFormat(intent.getIntExtra("format", 0));
         
         Button btnText = (Button)findViewById(R.id.create_text);
+        Button btnImage = (Button)findViewById(R.id.create_image);
         btnText.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				view_create.createTextField("name", 50, 50);
+			}
+		});
+        btnImage.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				view_create.createImageField("src", 50, 50);
 			}
 		});
 	}

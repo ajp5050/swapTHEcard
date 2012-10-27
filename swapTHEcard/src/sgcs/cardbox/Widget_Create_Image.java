@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.util.AttributeSet;
+import android.util.FloatMath;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -11,10 +12,14 @@ import android.widget.ImageView;
 
 public class Widget_Create_Image extends Widget_Create_Base {
 	private ImageView imageview;
+	private float scale_x = 1.0f, scale_y = 1.0f;
 	
 	private float temp_x, temp_y;
 	private int move_count;
+	private float baseDist;
+	private float prev_width, prev_height;
 	private boolean is_moving;
+	private boolean is_scaling;
 	private AlertDialog.Builder menubuilder;
 	
 	public Widget_Create_Image(Context context) {
@@ -33,18 +38,21 @@ public class Widget_Create_Image extends Widget_Create_Base {
 		//initialize
 		params = new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		setLayoutParams(params);
-
+		
 		menubuilder = new AlertDialog.Builder(act_create2);
 		menubuilder.setTitle("Menu");
-		menubuilder.setItems(new String[] {"Select Image", "Delete"}, new DialogInterface.OnClickListener() {
+		menubuilder.setItems(new String[] {"Select Image", "Set Detail Scale","Delete"}, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
 				switch(which){
 				case 0:
-					;
+					break;
 				case 1:
+					break;
+				case 2:
 					delete();
+					break;
 				default:
-					;
+					break;
 				}
 			}
 		});
@@ -54,35 +62,71 @@ public class Widget_Create_Image extends Widget_Create_Base {
 		imageview = new ImageView(act_create2);
 		imageview.setOnTouchListener(new View.OnTouchListener() {
 			public boolean onTouch(View v, MotionEvent event) {
-				if(event.getAction() == MotionEvent.ACTION_DOWN){
-					is_moving = false;
-					move_count = 0;
-					temp_x = event.getX();
-					temp_y = event.getY();
-					selected();
-				}
-				if(event.getAction() == MotionEvent.ACTION_MOVE){
-					move_count++;
-					if(move_count > 5){
-						is_moving = true;
-						setLocation(curr_x + (int)(event.getX()-temp_x), curr_y + (int)(event.getY()-temp_y));
+				if(event.getPointerCount() == 1){
+					if(event.getActionMasked() == MotionEvent.ACTION_DOWN){
+						is_moving = false;
+						is_scaling = false;
 						move_count = 0;
+						temp_x = event.getX();
+						temp_y = event.getY();
+						selected();
 					}
-				}
-				if(event.getAction() == MotionEvent.ACTION_UP){
-					if(is_moving == true){
-						curr_x += (int)(event.getX()-temp_x);
-						curr_y += (int)(event.getY()-temp_y);
-						setLocation(curr_x, curr_y);
+					if(event.getActionMasked() == MotionEvent.ACTION_MOVE){
+						if(is_scaling == true)
+							return true;
+						move_count++;
+						if(move_count > 5){
+							is_moving = true;
+							setLocation(curr_x + (int)(event.getX()-temp_x), curr_y + (int)(event.getY()-temp_y));
+							move_count = 0;
+						}
 					}
+					if(event.getActionMasked() == MotionEvent.ACTION_UP){
+						if(is_scaling == true)
+							return true;
+						if(is_moving == true){
+							curr_x += (int)(event.getX()-temp_x);
+							curr_y += (int)(event.getY()-temp_y);
+							setLocation(curr_x, curr_y);
+						}
+					}
+					return false;
 				}
-				return false;
+				else if(event.getPointerCount() == 2){
+					is_scaling = true;
+					if(event.getActionMasked() == MotionEvent.ACTION_POINTER_DOWN){
+						baseDist = getDistance(event);
+						prev_width = imageview.getWidth();
+						prev_height = imageview.getHeight();
+					}
+					else if(event.getActionMasked() == MotionEvent.ACTION_POINTER_UP){
+						float ratio = getDistance(event)/baseDist;
+						params.width = (int)(prev_width*ratio);
+						params.height = (int)(prev_height*ratio);
+						setLayoutParams(params);
+						scale_x = scale_x*ratio;
+						scale_y = scale_y*ratio;
+					}
+					else{
+						move_count++;
+						if(move_count > 5){
+							float ratio = getDistance(event)/baseDist;
+							params.width = (int)(prev_width*ratio);
+							params.height = (int)(prev_height*ratio);
+							setLayoutParams(params);
+						}
+					}
+					return true;
+				}
+				else{
+					return false;
+				}
 			}
 		});
 		imageview.setOnLongClickListener(new View.OnLongClickListener() {
 			public boolean onLongClick(View v) {
 				boolean consumed = false;
-				if(is_moving == false){
+				if(is_moving == false && is_scaling == false){
 					menubuilder.show();
 					consumed = true;
 				}
@@ -96,6 +140,15 @@ public class Widget_Create_Image extends Widget_Create_Base {
 	}
 
 	public void setImageSrc(String src) {
-
+		imageview.setImageResource(R.drawable.h1_naver);
+		params.width = LayoutParams.WRAP_CONTENT;
+		params.height = LayoutParams.WRAP_CONTENT;
+		setLayoutParams(params);
+	}
+	
+	private float getDistance(MotionEvent event){
+		float dx = event.getX(0) - event.getX(1);
+		float dy = event.getY(0) - event.getY(1);
+		return FloatMath.sqrt(dx*dx + dy*dy);
 	}
 }

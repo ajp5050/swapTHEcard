@@ -48,13 +48,14 @@ public class Widget_Create_Text extends Widget_Create_Base {
 			public void onClick(DialogInterface dialog, int which) {
 				switch(which){
 				case 0:
-					;
+					break;
 				case 1:
-					;
+					break;
 				case 2:
 					delete();
+					break;
 				default:
-					;
+					break;
 				}
 			}
 		});
