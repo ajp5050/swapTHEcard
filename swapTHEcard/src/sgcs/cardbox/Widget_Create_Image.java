@@ -12,12 +12,13 @@ import android.widget.ImageView;
 
 public class Widget_Create_Image extends Widget_Create_Base {
 	private ImageView imageview;
+	private float base_width, base_height;
 	private float scale_x = 1.0f, scale_y = 1.0f;
+	private boolean is_measured = false;
 	
 	private float temp_x, temp_y;
 	private int move_count;
 	private float baseDist;
-	private float prev_width, prev_height;
 	private boolean is_moving;
 	private boolean is_scaling;
 	private AlertDialog.Builder menubuilder;
@@ -62,6 +63,12 @@ public class Widget_Create_Image extends Widget_Create_Base {
 		imageview = new ImageView(act_create2);
 		imageview.setOnTouchListener(new View.OnTouchListener() {
 			public boolean onTouch(View v, MotionEvent event) {
+				if(is_measured == false){
+					base_width = imageview.getWidth();
+					base_height = imageview.getHeight();
+					is_measured = true;
+				}
+				
 				if(event.getPointerCount() == 1){
 					if(event.getActionMasked() == MotionEvent.ACTION_DOWN){
 						is_moving = false;
@@ -96,23 +103,25 @@ public class Widget_Create_Image extends Widget_Create_Base {
 					is_scaling = true;
 					if(event.getActionMasked() == MotionEvent.ACTION_POINTER_DOWN){
 						baseDist = getDistance(event);
-						prev_width = imageview.getWidth();
-						prev_height = imageview.getHeight();
 					}
 					else if(event.getActionMasked() == MotionEvent.ACTION_POINTER_UP){
 						float ratio = getDistance(event)/baseDist;
-						params.width = (int)(prev_width*ratio);
-						params.height = (int)(prev_height*ratio);
+						params.width = (int)(base_width*scale_x*ratio);
+						params.height = (int)(base_height*scale_y*ratio);
+						params.setMargins(curr_x + (int)(base_width*scale_x*(1.0f-ratio)/2.0f), curr_y + (int)(base_height*scale_y*(1.0f-ratio)/2.0f), 0, 0);
 						setLayoutParams(params);
 						scale_x = scale_x*ratio;
 						scale_y = scale_y*ratio;
+						curr_x += (int)(base_width*scale_x*(1.0f-ratio)/4.0f);
+						curr_y += (int)(base_height*scale_y*(1.0f-ratio)/4.0f);
 					}
 					else{
 						move_count++;
 						if(move_count > 5){
 							float ratio = getDistance(event)/baseDist;
-							params.width = (int)(prev_width*ratio);
-							params.height = (int)(prev_height*ratio);
+							params.width = (int)(base_width*scale_x*ratio);
+							params.height = (int)(base_height*scale_y*ratio);
+							params.setMargins(curr_x + (int)(base_width*scale_x*(1.0f-ratio)/2.0f), curr_y + (int)(base_height*scale_y*(1.0f-ratio)/2.0f), 0, 0);
 							setLayoutParams(params);
 						}
 					}
@@ -144,6 +153,10 @@ public class Widget_Create_Image extends Widget_Create_Base {
 		params.width = LayoutParams.WRAP_CONTENT;
 		params.height = LayoutParams.WRAP_CONTENT;
 		setLayoutParams(params);
+		
+		is_measured = false;
+		scale_x = 1.0f;
+		scale_y = 1.0f;
 	}
 	
 	private float getDistance(MotionEvent event){

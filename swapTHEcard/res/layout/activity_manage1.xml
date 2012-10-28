@@ -4,25 +4,29 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
     
-	<Button 
-	android:text="Create Card" 
-	android:id="@+id/createCard" 
-	android:layout_height="wrap_content" 
-	android:layout_width="fill_parent"
-	/>
-	
-	<Button 
-	android:text="Recognize Card" 
-	android:id="@+id/recognizeCard" 
-	android:layout_height="wrap_content" 
-	android:layout_width="fill_parent"
-	/>
-	
-	<Button 
-	android:text="Manage Card" 
-	android:id="@+id/manageCard" 
-	android:layout_height="wrap_content" 
-	android:layout_width="fill_parent"
-	/>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+        
+        <Spinner
+            android:id="@+id/manage_SortKind"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:listitem="@android:layout/simple_spinner_item" />
+        
+        <EditText
+            android:id="@+id/manage_SearchText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="이름, 전화번호 검색" />
+        
+    </LinearLayout>
+    
+    <ListView
+        android:id="@+id/manage_listPerson"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+    </ListView> 
 	
 </LinearLayout>
