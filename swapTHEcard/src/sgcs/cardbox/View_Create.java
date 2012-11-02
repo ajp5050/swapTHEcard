@@ -3,18 +3,13 @@ package sgcs.cardbox;
 import java.util.ArrayList;
 
 import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 public class View_Create extends FrameLayout{
+	//size width = 1063, height = 591 with dip = 300
 	Context act_create2;
-	final int card_width = 1063, card_height = 591;
-	int changed_width = 1063, changed_height = 591;
-	int view_width, view_height;
 	
 	public ArrayList<Widget_Create_Base> objlist;
 	public int selected_object_index = -1;
@@ -37,28 +32,7 @@ public class View_Create extends FrameLayout{
 		init();
 	}
 	
-	public class CanvasView extends View{
-		public CanvasView(Context context) {
-			super(context);
-			setOnClickListener(new View.OnClickListener(){
-				public void onClick(View v) {
-					if(selected_object_index != -1)
-						objlist.get(selected_object_index).disable_edit();
-					selected_object_index = -1;
-				}
-			});
-		}
-		
-		public void onDraw(Canvas canvas){
-	        view_width = this.getWidth();
-			view_height = this.getHeight();
-		}
-	}
-	
 	private void init(){
-		CanvasView cv = new CanvasView(act_create2);
-		addView(cv);
-		
 		objlist = new ArrayList<Widget_Create_Base>();
 		objlist.clear();
 	}
@@ -81,7 +55,7 @@ public class View_Create extends FrameLayout{
 		widget.setParentView(this);
 		widget.setLocation(x, y);
 		widget.setLable(lable);
-		this.addView(widget);
+		addView(widget);
 		
 		objlist.add(widget);
 	}
@@ -91,7 +65,7 @@ public class View_Create extends FrameLayout{
 		widget.setParentView(this);
 		widget.setLocation(x, y);
 		widget.setImageSrc(src);
-		this.addView(widget);
+		addView(widget);
 		
 		objlist.add(widget);
 	}

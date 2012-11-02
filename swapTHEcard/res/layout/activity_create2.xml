@@ -24,12 +24,17 @@
     	
     </LinearLayout>
     
-    <sgcs.cardbox.View_Create
-        android:id="@+id/view_create"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
+    <sgcs.cardbox.ScrollView_Create
+       	android:layout_width="match_parent"
         android:layout_height="0px"
         android:layout_weight="5" >
-	</sgcs.cardbox.View_Create>
-	
+        
+	    <sgcs.cardbox.View_Create
+	        android:id="@+id/view_create"
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:background="#ffffff" >
+		</sgcs.cardbox.View_Create>
+		
+	</sgcs.cardbox.ScrollView_Create>
 </LinearLayout>

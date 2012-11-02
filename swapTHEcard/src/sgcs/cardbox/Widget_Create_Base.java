@@ -61,6 +61,10 @@ public class Widget_Create_Base extends FrameLayout{
 	}
 	
 	public void delete(){
+		if(view_create.selected_object_index != -1)
+			view_create.objlist.get(view_create.selected_object_index).disable_edit();
+		view_create.selected_object_index = -1;
+		
 		view_create.objlist.remove(this);
 		view_create.removeView(this);
 	}
